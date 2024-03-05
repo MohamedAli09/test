@@ -1,15 +1,20 @@
 import React from "react";
 import axios from "axios";
 import img from "./portrait-young-cheerful-lady-shirt-denim-shorts-standing-with-colorful-shopping-bags-hands-happily-looking-aside-pink-background.jpg";
+import img2 from "./836.jpg";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
- 
+import { useState } from "react";
+
 import "./App.css";
-const apiUrl = process.env.api
- export default function App() {
+// const apiUrl = process.env.api;
+export default function App() {
+  const [data, setData] = useState(null);
+
   async function deleteData() {
     try {
-      const res = await axios.delete(apiUrl);
+      const res = await axios.delete("http://127.0.0.1/login");
       // console.log(res.data);
 
       // Display success  notification using react-toastify
@@ -41,7 +46,8 @@ const apiUrl = process.env.api
   async function getData() {
     try {
       const res = await axios.get("http://127.0.0.1/login");
-      console.log(res.data);
+      setData(res.data);
+      // console.log(res.data);
     } catch (error) {
       console.error("Error getting data:", error);
     }
@@ -51,7 +57,7 @@ const apiUrl = process.env.api
     try {
       const userName = document.getElementById("name").value;
       const res = await axios.post("http://127.0.0.1/login", { userName });
-      console.log(res);
+      // console.log(res);
 
       // Display success notification using react-toastify
       toast.success("Data posted successfully", {
@@ -66,7 +72,7 @@ const apiUrl = process.env.api
     } catch (error) {
       const userName = document.getElementById("name").value;
       if (!userName) {
-        console.log(error.response.data.err.message);
+        // console.log(error.response.data.err.message);
         toast.error("Name is required", {
           position: "top-center",
           autoClose: 1500,
@@ -77,7 +83,7 @@ const apiUrl = process.env.api
           progress: undefined,
         });
       } else {
-        console.log("Name is already exist!");
+        // console.log("Name is already exist!");
 
         toast.error("Name already exists", {
           position: "top-center",
@@ -110,13 +116,9 @@ const apiUrl = process.env.api
           >
             Post
           </button>
-          <button
-            className="btn btn-primary me-1"
-            type="button"
-            onClick={getData}
-          >
+          <a href="#popup2" className="btn btn-primary me-1" onClick={getData}>
             Get
-          </button>
+          </a>
           <button className="btn btn-danger" type="button" onClick={deleteData}>
             Delete
           </button>
@@ -135,14 +137,14 @@ const apiUrl = process.env.api
           theme="light"
         />
       </div>
-      <div  className="popup-card">
-        <div class="popup-link">
+
+      <div className="popup-card  ">
+        <div className="popup-link  ">
           <a href="#popup1">Private Button</a>
-          
         </div>
-        <div id="popup1" class="popup-container">
-          <div class="popup-content">
-            <a href="#" class="close">
+        <div id="popup1" className="popup-container">
+          <div className="popup-content">
+            <a href="#" className="close">
               &times;
             </a>
             <img src={img} alt="" className="w-100" />
@@ -153,6 +155,32 @@ const apiUrl = process.env.api
               ever since the 1500s, when an unknown printer took a galley of
               type and scrambled it to make a type specimen book.
             </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="popup-card">
+        <div className="popup-link"></div>
+        <div id="popup2" className="popup-container  ">
+          <div className="popup-content">
+            <a href="#" className="close">
+              &times;
+            </a>
+            <img src={img2} alt="" className="w-100" />
+            <h3 className="text-center">Users</h3>
+
+            <div className="users text-center mt-5  ">
+              <div className="row  g-4">
+                {data?.usersData.map((user) => (
+                  <div className="col-md-4  " key={user._id}>
+                    <div className="users-card border rounded overflow-auto">
+                      <p className="m-0 p-1">name :{user.userName}</p>
+                      <p className="m-0 p-1">IP :{user.IP}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
